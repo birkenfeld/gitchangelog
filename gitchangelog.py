@@ -68,7 +68,7 @@ def main():
             msglines.append(line)
 
     logname = os.popen('git config ' + CONFIG).read().strip() or DEFAULT
-    diff = os.popen('git diff --staged -- ' + logname).readlines()
+    diff = os.popen('git diff --color=never --staged -- ' + logname).readlines()
     log = []
     for line in diff:
         if line.startswith('+') and not line.startswith('+++'):
