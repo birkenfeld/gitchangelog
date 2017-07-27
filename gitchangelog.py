@@ -40,6 +40,11 @@ import sys
 CONFIG = 'hooks.changelogfile'
 DEFAULT = 'CHANGES'
 
+WARNING_CONFIG = 'hooks.changelogwarning'
+WARNING_DEFAULT = ('#===================================\n'
+                   '# WARNING: No changelog entry found!\n'
+                   '#===================================')
+
 _bullet_re = re.compile(r'\s*[-+*]\s+')
 
 
@@ -74,6 +79,10 @@ def main():
         if line.startswith('+') and not line.startswith('+++'):
             log.append(line[1:].rstrip().expandtabs())
     log = normalize_log(log)
+    if not log:
+        warning = (os.popen('git config ' + WARNING_CONFIG).read().strip()
+                   or WARNING_DEFAULT)
+        log = warning
     with open(msgfile, 'w') as fp:
         fp.write(log)
         fp.write('\n')
